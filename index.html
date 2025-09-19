@@ -1,0 +1,2364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriSmart Advisor - Smart Farming Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 25px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            animation: loginSlideIn 0.5s ease;
+        }
+
+        @keyframes loginSlideIn {
+            from { 
+                transform: translateY(-50px) scale(0.9); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+            }
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            color: #2c5530;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: #2c5530;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .input-group input:focus {
+            border-color: #2c5530;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(44, 85, 48, 0.1);
+            background: white;
+        }
+
+        .input-group input::placeholder {
+            color: #999;
+        }
+
+        .phone-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .country-code {
+            background: #2c5530;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            min-width: 70px;
+        }
+
+        .otp-section {
+            display: none;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .otp-input {
+            width: 50px !important;
+            height: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 10px !important;
+            padding: 0 !important;
+        }
+
+        .login-btn {
+            background: linear-gradient(45deg, #2c5530, #4a7c59);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(44, 85, 48, 0.3);
+        }
+
+        .login-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover:before {
+            left: 100%;
+        }
+
+        .timer {
+            color: #2c5530;
+            font-weight: 600;
+            margin: 1rem 0;
+        }
+
+        .resend-btn {
+            background: none;
+            border: none;
+            color: #2c5530;
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .resend-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            text-decoration: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 10px;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: rgba(39, 174, 96, 0.1);
+            border-radius: 10px;
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        .main-content.logged-in {
+            display: block;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-left: 1rem;
+            display: none;
+        }
+
+        .user-info.show {
+            display: block;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-left: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Voice Support Styles */
+        .voice-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .voice-input-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .voice-input-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .voice-input-btn.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+
+        .voice-output-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .voice-output-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        .voice-output-btn.speaking {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .voice-language-btn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .voice-language-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(155, 89, 182, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .voice-status {
+            position: fixed;
+            bottom: 120px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            display: none;
+            max-width: 300px;
+            text-align: center;
+            z-index: 1001;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .voice-status.show {
+            display: block;
+        }
+
+        @keyframes slideInRight {
+            from { 
+                transform: translateX(100px); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateX(0); 
+                opacity: 1; 
+            }
+        }
+
+        .voice-commands-help {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            display: none;
+            z-index: 2000;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .voice-commands-help.show {
+            display: block;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .voice-commands-help h3 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .voice-commands-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .voice-commands-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .voice-commands-list li:last-child {
+            border-bottom: none;
+        }
+
+        .command {
+            font-weight: 600;
+            color: #2c5530;
+        }
+
+        .description {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .close-help-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-help-btn:hover {
+            color: #333;
+        }
+
+        /* Voice Input Styles */
+        .voice-input-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 3000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .voice-input-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .voice-input-animation {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 2rem;
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .voice-transcript {
+            background: rgba(244, 244, 244, 0.8);
+            padding: 1rem;
+            border-radius: 15px;
+            margin: 1rem 0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            font-style: italic;
+        }
+
+        .voice-cancel-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .voice-cancel-btn:hover {
+            background: #5a6268;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c5530;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2c5530;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Language Selector */
+        .language-selector {
+            position: relative;
+        }
+
+        .language-btn {
+            background: #2c5530;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-btn:hover {
+            background: #1e3a21;
+            transform: translateY(-2px);
+        }
+
+        .language-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1001;
+            min-width: 200px;
+        }
+
+        .language-dropdown.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .language-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-bottom: 1px solid #eee;
+        }
+
+        .language-option:hover {
+            background: #f8f9fa;
+        }
+
+        .language-option:last-child {
+            border-bottom: none;
+        }
+
+        /* Main Content */
+        main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Feature Cards */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #2c5530;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 2% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        /* Search and Filter */
+        .search-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .search-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c5530;
+        }
+
+        .search-group select,
+        .search-group input {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-group select:focus,
+        .search-group input:focus {
+            border-color: #2c5530;
+            outline: none;
+        }
+
+        .search-btn {
+            background: linear-gradient(45deg, #2c5530, #4a7c59);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: auto;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44, 85, 48, 0.3);
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table th {
+            background: #2c5530;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Weather Widget */
+        .weather-widget {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 2rem;
+            border-radius: 20px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .weather-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .weather-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(44, 85, 48, 0.95);
+            color: white;
+            text-align: center;
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">🌱 AgriSmart Advisor</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#crops">Crops</a></li>
+                <li><a href="#fertilizers">Fertilizers</a></li>
+                <li><a href="#soil">Soil</a></li>
+                <li><a href="#weather">Weather</a></li>
+                <li><a href="#recommendations">Recommendations</a></li>
+            </ul>
+            <div class="nav-right">
+                <div class="user-info" id="userInfo">
+                    <span id="userName">Welcome, User!</span>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <div class="language-selector">
+                    <button class="language-btn" onclick="toggleLanguage()">🌐 Language</button>
+                    <div class="language-dropdown" id="languageDropdown">
+                        <div class="language-option" onclick="changeLanguage('en')">🇬🇧 English</div>
+                        <div class="language-option" onclick="changeLanguage('hi')">🇮🇳 हिंदी (Hindi)</div>
+                        <div class="language-option" onclick="changeLanguage('bn')">🇧🇩 বাংলা (Bengali)</div>
+                        <div class="language-option" onclick="changeLanguage('te')">📍 తెలుగు (Telugu)</div>
+                        <div class="language-option" onclick="changeLanguage('mr')">🏔️ मराठी (Marathi)</div>
+                        <div class="language-option" onclick="changeLanguage('ta')">🌴 தமிழ் (Tamil)</div>
+                        <div class="language-option" onclick="changeLanguage('gu')">🦁 ગુજરાતી (Gujarati)</div>
+                        <div class="language-option" onclick="changeLanguage('kn')">🐘 ಕನ್ನಡ (Kannada)</div>
+                        <div class="language-option" onclick="changeLanguage('ml')">🥥 മലയാളം (Malayalam)</div>
+                        <div class="language-option" onclick="changeLanguage('pa')">🎭 ਪੰਜਾਬੀ (Punjabi)</div>
+                        <div class="language-option" onclick="changeLanguage('or')">🏛️ ଓଡ଼ିଆ (Odia)</div>
+                        <div class="language-option" onclick="changeLanguage('as')">🦏 অসমীয়া (Assamese)</div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Voice Input Overlay -->
+    <div class="voice-input-overlay" id="voiceInputOverlay">
+        <div class="voice-input-container">
+            <div class="voice-input-animation">🎤</div>
+            <h3 id="voiceInputTitle">Listening...</h3>
+            <p id="voiceInputDesc">Speak your command or question</p>
+            <div class="voice-transcript" id="voiceTranscript">
+                Say something...
+            </div>
+            <button class="voice-cancel-btn" onclick="stopVoiceInput()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Voice Commands Help -->
+    <div class="voice-commands-help" id="voiceCommandsHelp">
+        <button class="close-help-btn" onclick="closeVoiceHelp()">&times;</button>
+        <h3>🎤 Voice Commands</h3>
+        <ul class="voice-commands-list">
+            <li>
+                <span class="command">"Show crops"</span>
+                <span class="description">Open crop information</span>
+            </li>
+            <li>
+                <span class="command">"Show fertilizers"</span>
+                <span class="description">Open fertilizer guide</span>
+            </li>
+            <li>
+                <span class="command">"Show soil analysis"</span>
+                <span class="description">Open soil information</span>
+            </li>
+            <li>
+                <span class="command">"Show weather"</span>
+                <span class="description">Open weather information</span>
+            </li>
+            <li>
+                <span class="command">"Get recommendations"</span>
+                <span class="description">Open smart recommendations</span>
+            </li>
+            <li>
+                <span class="command">"Read this"</span>
+                <span class="description">Read current content aloud</span>
+            </li>
+            <li>
+                <span class="command">"Change language to Hindi"</span>
+                <span class="description">Switch to Hindi language</span>
+            </li>
+            <li>
+                <span class="command">"What is rice farming?"</span>
+                <span class="description">Get information about topics</span>
+            </li>
+            <li>
+                <span class="command">"Stop speaking"</span>
+                <span class="description">Stop voice output</span>
+            </li>
+            <li>
+                <span class="command">"Help"</span>
+                <span class="description">Show voice commands</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Voice Status Display -->
+    <div class="voice-status" id="voiceStatus">
+        <div id="voiceStatusText">Voice ready</div>
+    </div>
+
+    <!-- Voice Controls -->
+    <div class="voice-controls">
+        <button class="voice-btn voice-language-btn" onclick="showVoiceHelp()" title="Voice Commands Help">
+            ❓
+        </button>
+        <button class="voice-btn voice-output-btn" id="voiceOutputBtn" onclick="toggleVoiceOutput()" title="Toggle Voice Output">
+            🔊
+        </button>
+        <button class="voice-btn voice-input-btn" id="voiceInputBtn" onclick="toggleVoiceInput()" title="Voice Input">
+            🎤
+        </button>
+    </div>
+
+    <!-- Login Page -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-container">
+            <div class="login-logo">🌱</div>
+            <h1 class="login-title">Welcome to AgriSmart</h1>
+            <p class="login-subtitle">Your Smart Farming Companion</p>
+            
+            <form class="login-form" id="loginForm">
+                <!-- Step 1: Name and Phone -->
+                <div class="login-step" id="step1">
+                    <div class="input-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        <div class="error-message" id="nameError" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <div class="phone-input">
+                            <select class="country-code">
+                                <option value="+91">+91</option>
+                            </select>
+                            <input type="tel" id="phoneNumber" placeholder="Enter 10-digit mobile number" maxlength="10" required>
+                        </div>
+                        <div class="error-message" id="phoneError" style="display: none;"></div>
+                    </div>
+                    
+                    <button type="button" class="login-btn" onclick="sendOTP()">
+                        Send OTP
+                    </button>
+                </div>
+
+                <!-- Step 2: OTP Verification -->
+                <div class="login-step otp-section" id="step2">
+                    <div class="input-group">
+                        <label>Enter OTP</label>
+                        <p style="color: #666; font-size: 0.9rem; margin-bottom: 1rem;">
+                            OTP sent to <span id="phoneDisplay"></span>
+                        </p>
+                        <div class="otp-inputs">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 1)" onkeyup="handleBackspace(this, event)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 2)" onkeyup="handleBackspace(this, event)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 3)" onkeyup="handleBackspace(this, event)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 4)" onkeyup="handleBackspace(this, event)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 5)" onkeyup="handleBackspace(this, event)">
+                            <input type="text" class="otp-input" maxlength="1" oninput="moveToNext(this, 6)" onkeyup="handleBackspace(this, event)">
+                        </div>
+                        <div class="error-message" id="otpError" style="display: none;"></div>
+                        <div class="success-message" id="otpSuccess" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="timer" id="otpTimer">
+                        Resend OTP in <span id="countdown">30</span> seconds
+                    </div>
+                    
+                    <button type="button" class="resend-btn" id="resendBtn" onclick="resendOTP()" disabled>
+                        Resend OTP
+                    </button>
+                    
+                    <button type="button" class="login-btn" onclick="verifyOTP()">
+                        Verify & Login
+                    </button>
+                    
+                    <button type="button" class="login-btn" onclick="goBackToStep1()" style="background: #6c757d; margin-top: 1rem;">
+                        Change Number
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <main class="main-content" id="mainContent">>
+        <section class="hero container">
+            <h1 id="heroTitle">AgriSmart Advisor</h1>
+            <p id="heroSubtitle">Your Complete Agricultural Intelligence Platform - Empowering Farmers with Smart Solutions</p>
+        </section>
+
+        <section class="container">
+            <div class="search-container">
+                <h2 id="searchTitle">Smart Agricultural Recommendations</h2>
+                <div class="search-grid">
+                    <div class="search-group">
+                        <label for="cropSelect" id="cropLabel">Select Crop:</label>
+                        <select id="cropSelect">
+                            <option value="">Choose Crop</option>
+                            <option value="rice">Rice (चावल)</option>
+                            <option value="wheat">Wheat (गेहूं)</option>
+                            <option value="cotton">Cotton (कपास)</option>
+                            <option value="sugarcane">Sugarcane (गन्ना)</option>
+                            <option value="potato">Potato (आलू)</option>
+                            <option value="tomato">Tomato (टमाटर)</option>
+                            <option value="onion">Onion (प्याज)</option>
+                            <option value="maize">Maize (मक्का)</option>
+                            <option value="soybean">Soybean (सोयाबीन)</option>
+                            <option value="groundnut">Groundnut (मूंगफली)</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label for="soilSelect" id="soilLabel">Soil Type:</label>
+                        <select id="soilSelect">
+                            <option value="">Choose Soil</option>
+                            <option value="clay">Clay Soil (मिट्टी की मिट्टी)</option>
+                            <option value="sandy">Sandy Soil (रेतीली मिट्टी)</option>
+                            <option value="loamy">Loamy Soil (दोमट मिट्टी)</option>
+                            <option value="black">Black Soil (काली मिट्टी)</option>
+                            <option value="red">Red Soil (लाल मिट्टी)</option>
+                            <option value="alluvial">Alluvial Soil (जलोढ़ मिट्टी)</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <label for="seasonSelect" id="seasonLabel">Season:</label>
+                        <select id="seasonSelect">
+                            <option value="">Choose Season</option>
+                            <option value="kharif">Kharif (खरीफ)</option>
+                            <option value="rabi">Rabi (रबी)</option>
+                            <option value="zaid">Zaid (जायद)</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <button class="search-btn" onclick="getRecommendations()" id="searchBtn">Get Recommendations</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card" onclick="openModal('cropsModal')">
+                    <h3 id="cropsTitle">🌾 Crop Information</h3>
+                    <p id="cropsDesc">Comprehensive database of crops, their growing conditions, seasons, and yield information for Indian agriculture.</p>
+                </div>
+
+                <div class="feature-card" onclick="openModal('fertilizersModal')">
+                    <h3 id="fertilizersTitle">🧪 Fertilizer Guide</h3>
+                    <p id="fertilizersDesc">Expert recommendations on fertilizers for different crops and soil types to maximize your harvest.</p>
+                </div>
+
+                <div class="feature-card" onclick="openModal('soilModal')">
+                    <h3 id="soilTitle">🏔️ Soil Analysis</h3>
+                    <p id="soilDesc">Detailed soil type information, pH levels, nutrient content, and best practices for soil management.</p>
+                </div>
+
+                <div class="feature-card" onclick="openModal('weatherModal')">
+                    <h3 id="weatherTitle">🌤️ Weather Insights</h3>
+                    <p id="weatherDesc">Real-time weather data, forecasts, and climate information crucial for farming decisions.</p>
+                </div>
+            </div>
+
+            <div class="weather-widget">
+                <h2 id="weatherWidgetTitle">Today's Agricultural Weather</h2>
+                <div class="weather-info">
+                    <div class="weather-item">
+                        <h4 id="tempLabel">Temperature</h4>
+                        <p id="tempValue">28°C</p>
+                    </div>
+                    <div class="weather-item">
+                        <h4 id="humidityLabel">Humidity</h4>
+                        <p id="humidityValue">65%</p>
+                    </div>
+                    <div class="weather-item">
+                        <h4 id="rainfallLabel">Rainfall</h4>
+                        <p id="rainfallValue">2.5mm</p>
+                    </div>
+                    <div class="weather-item">
+                        <h4 id="windLabel">Wind Speed</h4>
+                        <p id="windValue">12 km/h</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modals -->
+    <div id="cropsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="cropsModalTitle">🌾 Comprehensive Crop Information</h2>
+            <div id="cropsContent">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="cropNameHeader">Crop</th>
+                            <th id="seasonHeader">Season</th>
+                            <th id="soilTypeHeader">Best Soil</th>
+                            <th id="tempRangeHeader">Temperature</th>
+                            <th id="rainfallHeader">Rainfall</th>
+                            <th id="yieldHeader">Avg. Yield</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Rice (चावल)</td><td>Kharif</td><td>Clay/Loamy</td><td>20-37°C</td><td>100-200cm</td><td>2-4 tons/ha</td></tr>
+                        <tr><td>Wheat (गेहूं)</td><td>Rabi</td><td>Loamy</td><td>10-25°C</td><td>50-75cm</td><td>3-5 tons/ha</td></tr>
+                        <tr><td>Cotton (कपास)</td><td>Kharif</td><td>Black/Red</td><td>21-32°C</td><td>50-100cm</td><td>500kg/ha</td></tr>
+                        <tr><td>Sugarcane (गन्ना)</td><td>Year-round</td><td>Loamy</td><td>20-35°C</td><td>75-150cm</td><td>80-100 tons/ha</td></tr>
+                        <tr><td>Potato (आलू)</td><td>Rabi</td><td>Sandy Loam</td><td>15-25°C</td><td>50-75cm</td><td>20-25 tons/ha</td></tr>
+                        <tr><td>Tomato (टमाटर)</td><td>Rabi/Zaid</td><td>Loamy</td><td>20-30°C</td><td>60-90cm</td><td>25-30 tons/ha</td></tr>
+                        <tr><td>Onion (प्याज)</td><td>Rabi/Kharif</td><td>Sandy Loam</td><td>15-25°C</td><td>60-100cm</td><td>15-20 tons/ha</td></tr>
+                        <tr><td>Maize (मक्का)</td><td>Kharif/Rabi</td><td>Well-drained</td><td>20-30°C</td><td>60-110cm</td><td>5-8 tons/ha</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="fertilizersModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="fertilizersModalTitle">🧪 Fertilizer Recommendations</h2>
+            <div id="fertilizersContent">
+                <h3 id="fertilizerGuideTitle">Crop-Specific Fertilizer Guide</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="fertCropHeader">Crop</th>
+                            <th id="nitrogenHeader">Nitrogen (N)</th>
+                            <th id="phosphorusHeader">Phosphorus (P)</th>
+                            <th id="potassiumHeader">Potassium (K)</th>
+                            <th id="organicHeader">Organic Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Rice</td><td>120-150 kg/ha</td><td>60-80 kg/ha</td><td>40-60 kg/ha</td><td>FYM, Compost</td></tr>
+                        <tr><td>Wheat</td><td>100-120 kg/ha</td><td>50-60 kg/ha</td><td>40-50 kg/ha</td><td>Vermicompost</td></tr>
+                        <tr><td>Cotton</td><td>120-150 kg/ha</td><td>60-75 kg/ha</td><td>60-75 kg/ha</td><td>Neem Cake</td></tr>
+                        <tr><td>Sugarcane</td><td>200-250 kg/ha</td><td>100-125 kg/ha</td><td>100-125 kg/ha</td><td>Pressmud</td></tr>
+                        <tr><td>Potato</td><td>150-180 kg/ha</td><td>80-100 kg/ha</td><td>100-120 kg/ha</td><td>FYM, Compost</td></tr>
+                        <tr><td>Tomato</td><td>120-150 kg/ha</td><td>80-100 kg/ha</td><td>100-120 kg/ha</td><td>Vermicompost</td></tr>
+                    </tbody>
+                </table>
+                <h3 id="soilSpecificTitle">Soil-Specific Recommendations</h3>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Clay Soil:</strong> Use organic matter like FYM to improve drainage. Apply phosphorus in split doses.</p>
+                    <p><strong>Sandy Soil:</strong> Regular application of organic fertilizers. Use slow-release fertilizers.</p>
+                    <p><strong>Black Soil:</strong> Rich in lime and iron but may need phosphorus and nitrogen supplements.</p>
+                    <p><strong>Red Soil:</strong> Usually acidic, may need lime application along with balanced NPK.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="soilModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="soilModalTitle">🏔️ Soil Type Analysis</h2>
+            <div id="soilContent">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="soilTypeCol">Soil Type</th>
+                            <th id="phRangeCol">pH Range</th>
+                            <th id="characteristicsCol">Characteristics</th>
+                            <th id="bestCropsCol">Best Crops</th>
+                            <th id="managementCol">Management</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Clay Soil</td>
+                            <td>6.0-7.5</td>
+                            <td>High water retention, poor drainage</td>
+                            <td>Rice, Wheat, Cotton</td>
+                            <td>Add organic matter, improve drainage</td>
+                        </tr>
+                        <tr>
+                            <td>Sandy Soil</td>
+                            <td>6.0-7.0</td>
+                            <td>Good drainage, low water retention</td>
+                            <td>Groundnut, Millet, Watermelon</td>
+                            <td>Regular irrigation, organic fertilizers</td>
+                        </tr>
+                        <tr>
+                            <td>Loamy Soil</td>
+                            <td>6.0-7.0</td>
+                            <td>Balanced drainage and retention</td>
+                            <td>Most crops, vegetables</td>
+                            <td>Maintain organic matter</td>
+                        </tr>
+                        <tr>
+                            <td>Black Soil</td>
+                            <td>7.0-8.5</td>
+                            <td>Rich in lime, high clay content</td>
+                            <td>Cotton, Sugarcane, Soybean</td>
+                            <td>Manage water logging</td>
+                        </tr>
+                        <tr>
+                            <td>Red Soil</td>
+                            <td>5.5-6.5</td>
+                            <td>Iron-rich, well-drained</td>
+                            <td>Groundnut, Cotton, Pulses</td>
+                            <td>May need lime application</td>
+                        </tr>
+                        <tr>
+                            <td>Alluvial Soil</td>
+                            <td>6.0-8.0</td>
+                            <td>Fertile, river deposited</td>
+                            <td>Rice, Wheat, Maize</td>
+                            <td>Regular nutrient management</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="weatherModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="weatherModalTitle">🌤️ Weather and Climate Information</h2>
+            <div id="weatherContent">
+                <h3 id="cropWeatherTitle">Optimal Weather Conditions for Major Crops</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th id="weatherCropCol">Crop</th>
+                            <th id="tempRequireCol">Temperature</th>
+                            <th id="rainfallRequireCol">Rainfall</th>
+                            <th id="humidityCol">Humidity</th>
+                            <th id="criticalStagesCol">Critical Stages</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Rice</td>
+                            <td>20-37°C</td>
+                            <td>100-200cm</td>
+                            <td>80-85%</td>
+                            <td>Flowering needs clear weather</td>
+                        </tr>
+                        <tr>
+                            <td>Wheat</td>
+                            <td>10-25°C</td>
+                            <td>50-75cm</td>
+                            <td>50-70%</td>
+                            <td>Avoid rain during harvest</td>
+                        </tr>
+                        <tr>
+                            <td>Cotton</td>
+                            <td>21-32°C</td>
+                            <td>50-100cm</td>
+                            <td>60-70%</td>
+                            <td>Dry weather during picking</td>
+                        </tr>
+                        <tr>
+                            <td>Sugarcane</td>
+                            <td>20-35°C</td>
+                            <td>75-150cm</td>
+                            <td>70-80%</td>
+                            <td>Cool, dry weather for maturity</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3 id="weatherAlertsTitle">Weather-Based Farming Alerts</h3>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Heavy Rain Alert:</strong> Postpone spraying operations and harvest if possible.</p>
+                    <p><strong>High Temperature:</strong> Increase irrigation frequency and provide shade for sensitive crops.</p>
+                    <p><strong>Low Humidity:</strong> Monitor for pest attacks and adjust irrigation schedule.</p>
+                    <p><strong>Hail Warning:</strong> Use protective covering for young plants and valuable crops.</p>
+                    <p><strong>Frost Alert:</strong> Protect crops with covering or use irrigation to prevent freezing.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations Results Modal -->
+    <div id="recommendationsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="recommendationsTitle">🎯 Smart Agricultural Recommendations</h2>
+            <div id="recommendationsResult"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 id="aboutTitle">About AgriSmart Advisor</h3>
+                    <p id="aboutDesc">Empowering farmers with intelligent agricultural solutions using modern technology and traditional wisdom.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 id="servicesTitle">Our Services</h3>
+                    <a href="#" id="cropConsultationLink">Crop Consultation</a>
+                    <a href="#" id="soilTestingLink">Soil Testing</a>
+                    <a href="#" id="weatherForecastLink">Weather Forecast</a>
+                    <a href="#" id="marketPricesLink">Market Prices</a>
+                </div>
+                <div class="footer-section">
+                    <h3 id="supportTitle">Support</h3>
+                    <a href="#" id="helpCenterLink">Help Center</a>
+                    <a href="#" id="contactUsLink">Contact Us</a>
+                    <a href="#" id="faqLink">FAQ</a>
+                    <a href="#" id="communityLink">Farmer Community</a>
+                </div>
+                <div class="footer-section">
+                    <h3 id="languagesTitle">Supported Languages</h3>
+                    <p id="languagesDesc">Available in 12+ Indian languages including Hindi, Bengali, Tamil, Telugu, and more.</p>
+                </div>
+            </div>
+            <p>&copy; 2024 AgriSmart Advisor. Made with ❤️ for Indian Farmers</p>
+        </div>
+    </footer>
+
+    <script>
+        // Voice Support Variables
+        let recognition;
+        let synthesis = window.speechSynthesis;
+        let isListening = false;
+        let isSpeaking = false;
+        let voiceOutputEnabled = true;
+        let currentVoice = null;
+        let availableVoices = [];
+
+        // Voice Language Mapping
+        const voiceLanguageMap = {
+            'en': 'en-US',
+            'hi': 'hi-IN',
+            'bn': 'bn-IN',
+            'te': 'te-IN',
+            'mr': 'mr-IN',
+            'ta': 'ta-IN',
+            'gu': 'gu-IN',
+            'kn': 'kn-IN',
+            'ml': 'ml-IN',
+            'pa': 'pa-IN',
+            'or': 'or-IN',
+            'as': 'as-IN'
+        };
+
+        // Initialize Voice Support
+        function initVoiceSupport() {
+            // Initialize Speech Recognition
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = voiceLanguageMap[currentLanguage] || 'en-US';
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    updateVoiceButton();
+                    showVoiceStatus('Listening... Speak now!');
+                    document.getElementById('voiceInputOverlay').style.display = 'flex';
+                };
+                
+                recognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        if (event.results[i].isFinal) {
+                            transcript = event.results[i][0].transcript;
+                        } else {
+                            document.getElementById('voiceTranscript').textContent = 
+                                event.results[i][0].transcript;
+                        }
+                    }
+                    
+                    if (transcript) {
+                        document.getElementById('voiceTranscript').textContent = transcript;
+                        processVoiceCommand(transcript);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    showVoiceStatus('Voice recognition error. Please try again.');
+                    stopVoiceInput();
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    updateVoiceButton();
+                    document.getElementById('voiceInputOverlay').style.display = 'none';
+                };
+            } else {
+                showVoiceStatus('Voice recognition not supported in this browser');
+            }
+
+            // Initialize Speech Synthesis
+            if ('speechSynthesis' in window) {
+                synthesis = window.speechSynthesis;
+                
+                // Load voices
+                function loadVoices() {
+                    availableVoices = synthesis.getVoices();
+                    setVoiceForLanguage(currentLanguage);
+                }
+                
+                if (synthesis.onvoiceschanged !== undefined) {
+                    synthesis.onvoiceschanged = loadVoices;
+                }
+                
+                loadVoices();
+            }
+        }
+
+        function setVoiceForLanguage(language) {
+            const langCode = voiceLanguageMap[language] || 'en-US';
+            const voice = availableVoices.find(v => v.lang.includes(langCode.split('-')[0]));
+            currentVoice = voice || availableVoices.find(v => v.lang.includes('en')) || availableVoices[0];
+        }
+
+        function toggleVoiceInput() {
+            if (!recognition) {
+                showVoiceStatus('Voice recognition not available');
+                return;
+            }
+
+            if (isListening) {
+                stopVoiceInput();
+            } else {
+                startVoiceInput();
+            }
+        }
+
+        function startVoiceInput() {
+            if (recognition && !isListening) {
+                recognition.lang = voiceLanguageMap[currentLanguage] || 'en-US';
+                recognition.start();
+            }
+        }
+
+        function stopVoiceInput() {
+            if (recognition && isListening) {
+                recognition.stop();
+                isListening = false;
+                updateVoiceButton();
+                document.getElementById('voiceInputOverlay').style.display = 'none';
+            }
+        }
+
+        function processVoiceCommand(command) {
+            const lowerCommand = command.toLowerCase().trim();
+            showVoiceStatus(`Processing: "${command}"`);
+            
+            setTimeout(() => {
+                // Navigation commands
+                if (lowerCommand.includes('show crops') || lowerCommand.includes('crop information')) {
+                    openModal('cropsModal');
+                    speak('Opening crop information');
+                }
+                else if (lowerCommand.includes('show fertilizer') || lowerCommand.includes('fertilizer guide')) {
+                    openModal('fertilizersModal');
+                    speak('Opening fertilizer guide');
+                }
+                else if (lowerCommand.includes('show soil') || lowerCommand.includes('soil analysis')) {
+                    openModal('soilModal');
+                    speak('Opening soil analysis information');
+                }
+                else if (lowerCommand.includes('show weather') || lowerCommand.includes('weather information')) {
+                    openModal('weatherModal');
+                    speak('Opening weather information');
+                }
+                else if (lowerCommand.includes('recommendation') || lowerCommand.includes('get recommendation')) {
+                    speak('Opening smart recommendations. Please select your preferences.');
+                    setTimeout(() => {
+                        document.querySelector('.search-container').scrollIntoView({ behavior: 'smooth' });
+                    }, 1000);
+                }
+                
+                // Language commands
+                else if (lowerCommand.includes('change language')) {
+                    if (lowerCommand.includes('hindi')) {
+                        changeLanguage('hi');
+                        speak('Language changed to Hindi', 'hi');
+                    } else if (lowerCommand.includes('english')) {
+                        changeLanguage('en');
+                        speak('Language changed to English', 'en');
+                    } else if (lowerCommand.includes('bengali')) {
+                        changeLanguage('bn');
+                        speak('Language changed to Bengali', 'bn');
+                    }
+                }
+                
+                // Reading commands
+                else if (lowerCommand.includes('read this') || lowerCommand.includes('read content')) {
+                    readCurrentContent();
+                }
+                
+                // Information queries
+                else if (lowerCommand.includes('what is') || lowerCommand.includes('tell me about')) {
+                    handleInformationQuery(lowerCommand);
+                }
+                
+                // Control commands
+                else if (lowerCommand.includes('stop speaking') || lowerCommand.includes('stop reading')) {
+                    stopSpeaking();
+                }
+                else if (lowerCommand.includes('help') || lowerCommand.includes('commands')) {
+                    showVoiceHelp();
+                    speak('Showing voice commands help');
+                }
+                
+                // Logout command
+                else if (lowerCommand.includes('logout') || lowerCommand.includes('sign out')) {
+                    speak('Logging out');
+                    setTimeout(logout, 1000);
+                }
+                
+                else {
+                    speak('Sorry, I did not understand that command. Say "help" to see available commands.');
+                }
+                
+                hideVoiceStatus();
+            }, 1000);
+        }
+
+        function handleInformationQuery(query) {
+            if (query.includes('rice')) {
+                speak('Rice is a staple crop grown mainly in monsoon season. It requires clay or loamy soil with good water retention and temperatures between 20 to 37 degrees Celsius.');
+            } else if (query.includes('wheat')) {
+                speak('Wheat is grown in winter season in well-drained loamy soil. It requires temperatures between 10 to 25 degrees Celsius and moderate rainfall.');
+            } else if (query.includes('cotton')) {
+                speak('Cotton is grown in monsoon season in black or red soil. It needs temperatures between 21 to 32 degrees Celsius and careful pest management.');
+            } else if (query.includes('fertilizer')) {
+                speak('Fertilizers provide essential nutrients like nitrogen, phosphorus, and potassium to crops. Organic fertilizers like farm yard manure are also beneficial for soil health.');
+            } else {
+                speak('I can provide information about crops, fertilizers, soil types, and weather conditions. Please be more specific in your question.');
+            }
+        }
+
+        function readCurrentContent() {
+            const activeModal = document.querySelector('.modal[style*="block"]');
+            let textToRead = '';
+            
+            if (activeModal) {
+                const content = activeModal.querySelector('.modal-content');
+                textToRead = content.innerText.replace(/[×]/g, '').trim();
+            } else {
+                const heroTitle = document.getElementById('heroTitle').textContent;
+                const heroSubtitle = document.getElementById('heroSubtitle').textContent;
+                textToRead = `${heroTitle}. ${heroSubtitle}. This is your complete agricultural intelligence platform.`;
+            }
+            
+            if (textToRead) {
+                speak(textToRead);
+            }
+        }
+
+        function speak(text, langOverride = null) {
+            if (!voiceOutputEnabled || !synthesis) return;
+            
+            // Stop current speech
+            synthesis.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+            
+            // Set voice based on current language or override
+            const lang = langOverride || currentLanguage;
+            setVoiceForLanguage(lang);
+            if (currentVoice) {
+                utterance.voice = currentVoice;
+            }
+            
+            utterance.onstart = function() {
+                isSpeaking = true;
+                updateVoiceOutputButton();
+            };
+            
+            utterance.onend = function() {
+                isSpeaking = false;
+                updateVoiceOutputButton();
+            };
+            
+            synthesis.speak(utterance);
+        }
+
+        function stopSpeaking() {
+            if (synthesis) {
+                synthesis.cancel();
+                isSpeaking = false;
+                updateVoiceOutputButton();
+                showVoiceStatus('Speech stopped');
+            }
+        }
+
+        function toggleVoiceOutput() {
+            voiceOutputEnabled = !voiceOutputEnabled;
+            updateVoiceOutputButton();
+            
+            if (voiceOutputEnabled) {
+                speak('Voice output enabled');
+            } else {
+                stopSpeaking();
+                showVoiceStatus('Voice output disabled');
+            }
+        }
+
+        function updateVoiceButton() {
+            const btn = document.getElementById('voiceInputBtn');
+            if (isListening) {
+                btn.classList.add('listening');
+                btn.title = 'Stop Listening';
+            } else {
+                btn.classList.remove('listening');
+                btn.title = 'Start Voice Input';
+            }
+        }
+
+        function updateVoiceOutputButton() {
+            const btn = document.getElementById('voiceOutputBtn');
+            if (isSpeaking) {
+                btn.classList.add('speaking');
+                btn.innerHTML = '🔊';
+            } else if (voiceOutputEnabled) {
+                btn.classList.remove('speaking');
+                btn.innerHTML = '🔊';
+            } else {
+                btn.classList.remove('speaking');
+                btn.innerHTML = '🔇';
+            }
+        }
+
+        function showVoiceStatus(message) {
+            const status = document.getElementById('voiceStatus');
+            document.getElementById('voiceStatusText').textContent = message;
+            status.classList.add('show');
+            
+            setTimeout(() => {
+                hideVoiceStatus();
+            }, 3000);
+        }
+
+        function hideVoiceStatus() {
+            document.getElementById('voiceStatus').classList.remove('show');
+        }
+
+        function showVoiceHelp() {
+            document.getElementById('voiceCommandsHelp').classList.add('show');
+        }
+
+        function closeVoiceHelp() {
+            document.getElementById('voiceCommandsHelp').classList.remove('show');
+        }
+
+        // Enhanced language change function with voice support
+        const originalChangeLanguage = changeLanguage;
+        changeLanguage = function(lang) {
+            currentLanguage = lang;
+            updateLanguage();
+            setVoiceForLanguage(lang);
+            if (recognition) {
+                recognition.lang = voiceLanguageMap[lang] || 'en-US';
+            }
+            document.getElementById('languageDropdown').classList.remove('active');
+            
+            if (voiceOutputEnabled) {
+                const langNames = {
+                    'en': 'English',
+                    'hi': 'Hindi',
+                    'bn': 'Bengali',
+                    'te': 'Telugu',
+                    'mr': 'Marathi',
+                    'ta': 'Tamil',
+                    'gu': 'Gujarati',
+                    'kn': 'Kannada',
+                    'ml': 'Malayalam',
+                    'pa': 'Punjabi',
+                    'or': 'Odia',
+                    'as': 'Assamese'
+                };
+                setTimeout(() => {
+                    speak(`Language changed to ${langNames[lang]}`, lang);
+                }, 500);
+            }
+        };
+        let otpTimer;
+        let currentOTP = '';
+        let userData = {};
+
+        // Login System Functions
+        function validateName(name) {
+            return name.trim().length >= 2 && /^[a-zA-Z\s]+$/.test(name.trim());
+        }
+
+        function validatePhone(phone) {
+            return /^[6-9]\d{9}$/.test(phone);
+        }
+
+        function generateOTP() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        function sendOTP() {
+            const nameInput = document.getElementById('fullName');
+            const phoneInput = document.getElementById('phoneNumber');
+            const nameError = document.getElementById('nameError');
+            const phoneError = document.getElementById('phoneError');
+            
+            // Reset errors
+            nameError.style.display = 'none';
+            phoneError.style.display = 'none';
+            
+            let isValid = true;
+            
+            // Validate name
+            if (!validateName(nameInput.value)) {
+                nameError.textContent = 'Please enter a valid name (minimum 2 characters, letters only)';
+                nameError.style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate phone
+            if (!validatePhone(phoneInput.value)) {
+                phoneError.textContent = 'Please enter a valid 10-digit Indian mobile number';
+                phoneError.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Store user data
+            userData.name = nameInput.value.trim();
+            userData.phone = phoneInput.value;
+            userData.fullPhone = '+91' + phoneInput.value;
+            
+            // Generate and store OTP (in real app, this would be sent via SMS)
+            currentOTP = generateOTP();
+            console.log('Generated OTP:', currentOTP); // For demo purposes
+            
+            // Show step 2
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').style.display = 'block';
+            document.getElementById('phoneDisplay').textContent = userData.fullPhone;
+            
+            // Start countdown timer
+            startOTPTimer();
+            
+            // Show success message (simulating SMS sent)
+            const otpSuccess = document.getElementById('otpSuccess');
+            otpSuccess.textContent = `OTP sent successfully! (Demo OTP: ${currentOTP})`;
+            otpSuccess.style.display = 'block';
+            
+            // Focus first OTP input
+            document.querySelector('.otp-input').focus();
+        }
+
+        function startOTPTimer() {
+            let timeLeft = 30;
+            const countdownElement = document.getElementById('countdown');
+            const resendBtn = document.getElementById('resendBtn');
+            const timerElement = document.getElementById('otpTimer');
+            
+            resendBtn.disabled = true;
+            timerElement.style.display = 'block';
+            
+            otpTimer = setInterval(() => {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(otpTimer);
+                    timerElement.style.display = 'none';
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function resendOTP() {
+            currentOTP = generateOTP();
+            console.log('Resent OTP:', currentOTP); // For demo purposes
+            
+            // Clear OTP inputs
+            document.querySelectorAll('.otp-input').forEach(input => {
+                input.value = '';
+            });
+            
+            // Clear messages
+            document.getElementById('otpError').style.display = 'none';
+            const otpSuccess = document.getElementById('otpSuccess');
+            otpSuccess.textContent = `OTP resent successfully! (Demo OTP: ${currentOTP})`;
+            otpSuccess.style.display = 'block';
+            
+            // Restart timer
+            startOTPTimer();
+            
+            // Focus first input
+            document.querySelector('.otp-input').focus();
+        }
+
+        function moveToNext(current, nextIndex) {
+            if (current.value.length === 1) {
+                const nextInput = document.querySelectorAll('.otp-input')[nextIndex];
+                if (nextInput) {
+                    nextInput.focus();
+                }
+            }
+            
+            // Auto-verify if all fields are filled
+            const allInputs = document.querySelectorAll('.otp-input');
+            const allFilled = Array.from(allInputs).every(input => input.value.length === 1);
+            if (allFilled) {
+                setTimeout(verifyOTP, 500); // Small delay for better UX
+            }
+        }
+
+        function handleBackspace(current, event) {
+            if (event.key === 'Backspace' && current.value === '') {
+                const currentIndex = Array.from(document.querySelectorAll('.otp-input')).indexOf(current);
+                if (currentIndex > 0) {
+                    const prevInput = document.querySelectorAll('.otp-input')[currentIndex - 1];
+                    prevInput.focus();
+                    prevInput.select();
+                }
+            }
+        }
+
+        function verifyOTP() {
+            const otpInputs = document.querySelectorAll('.otp-input');
+            const enteredOTP = Array.from(otpInputs).map(input => input.value).join('');
+            const otpError = document.getElementById('otpError');
+            const otpSuccess = document.getElementById('otpSuccess');
+            
+            // Reset messages
+            otpError.style.display = 'none';
+            otpSuccess.style.display = 'none';
+            
+            if (enteredOTP.length !== 6) {
+                otpError.textContent = 'Please enter complete 6-digit OTP';
+                otpError.style.display = 'block';
+                return;
+            }
+            
+            if (enteredOTP === currentOTP) {
+                // Successful login
+                otpSuccess.textContent = 'OTP verified successfully! Welcome to AgriSmart!';
+                otpSuccess.style.display = 'block';
+                
+                // Clear timer
+                if (otpTimer) {
+                    clearInterval(otpTimer);
+                }
+                
+                // Store user session
+                sessionStorage.setItem('agriSmartUser', JSON.stringify(userData));
+                
+                // Hide login and show main content
+                setTimeout(() => {
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('mainContent').classList.add('logged-in');
+                    document.getElementById('userInfo').classList.add('show');
+                    document.getElementById('userName').textContent = `Welcome, ${userData.name}!`;
+                    
+                    // Voice welcome message
+                    if (voiceOutputEnabled) {
+                        setTimeout(() => {
+                            speak(`Welcome to AgriSmart Advisor, ${userData.name}! You can use voice commands to navigate. Say "help" for available commands.`);
+                        }, 1000);
+                    }
+                }, 1500);
+            } else {
+                otpError.textContent = 'Invalid OTP. Please try again.';
+                otpError.style.display = 'block';
+                
+                // Clear inputs
+                otpInputs.forEach(input => {
+                    input.value = '';
+                });
+                otpInputs[0].focus();
+            }
+        }
+
+        function goBackToStep1() {
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            
+            // Clear OTP inputs and messages
+            document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+            document.getElementById('otpError').style.display = 'none';
+            document.getElementById('otpSuccess').style.display = 'none';
+            
+            // Clear timer
+            if (otpTimer) {
+                clearInterval(otpTimer);
+            }
+        }
+
+        function logout() {
+            // Clear session
+            sessionStorage.removeItem('agriSmartUser');
+            
+            // Reset UI
+            document.getElementById('mainContent').classList.remove('logged-in');
+            document.getElementById('userInfo').classList.remove('show');
+            document.getElementById('loginOverlay').style.display = 'flex';
+            
+            // Reset form
+            document.getElementById('loginForm').reset();
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step1').style.display = 'block';
+            
+            // Clear all messages
+            document.querySelectorAll('.error-message, .success-message').forEach(msg => {
+                msg.style.display = 'none';
+            });
+            
+            // Clear timer
+            if (otpTimer) {
+                clearInterval(otpTimer);
+            }
+            
+            // Clear OTP inputs
+            document.querySelectorAll('.otp-input').forEach(input => input.value = '');
+        }
+
+        function checkExistingSession() {
+            const storedUser = sessionStorage.getItem('agriSmartUser');
+            if (storedUser) {
+                userData = JSON.parse(storedUser);
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('mainContent').classList.add('logged-in');
+                document.getElementById('userInfo').classList.add('show');
+                document.getElementById('userName').textContent = `Welcome back, ${userData.name}!`;
+            }
+        }
+        const translations = {
+            en: {
+                heroTitle: "AgriSmart Advisor",
+                heroSubtitle: "Your Complete Agricultural Intelligence Platform - Empowering Farmers with Smart Solutions",
+                searchTitle: "Smart Agricultural Recommendations",
+                cropLabel: "Select Crop:",
+                soilLabel: "Soil Type:",
+                seasonLabel: "Season:",
+                searchBtn: "Get Recommendations",
+                cropsTitle: "🌾 Crop Information",
+                cropsDesc: "Comprehensive database of crops, their growing conditions, seasons, and yield information for Indian agriculture.",
+                fertilizersTitle: "🧪 Fertilizer Guide",
+                fertilizersDesc: "Expert recommendations on fertilizers for different crops and soil types to maximize your harvest.",
+                soilTitle: "🏔️ Soil Analysis",
+                soilDesc: "Detailed soil type information, pH levels, nutrient content, and best practices for soil management.",
+                weatherTitle: "🌤️ Weather Insights",
+                weatherDesc: "Real-time weather data, forecasts, and climate information crucial for farming decisions.",
+                weatherWidgetTitle: "Today's Agricultural Weather",
+                tempLabel: "Temperature",
+                humidityLabel: "Humidity",
+                rainfallLabel: "Rainfall",
+                windLabel: "Wind Speed",
+                aboutTitle: "About AgriSmart Advisor",
+                aboutDesc: "Empowering farmers with intelligent agricultural solutions using modern technology and traditional wisdom."
+            },
+            hi: {
+                heroTitle: "एग्रीस्मार्ट सलाहकार",
+                heroSubtitle: "आपका संपूर्ण कृषि बुद्धिमत्ता प्लेटफॉर्म - स्मार्ट समाधानों के साथ किसानों को सशक्त बनाना",
+                searchTitle: "स्मार्ट कृषि सिफारिशें",
+                cropLabel: "फसल चुनें:",
+                soilLabel: "मिट्टी का प्रकार:",
+                seasonLabel: "मौसम:",
+                searchBtn: "सिफारिशें प्राप्त करें",
+                cropsTitle: "🌾 फसल की जानकारी",
+                cropsDesc: "फसलों का व्यापक डेटाबेस, उनकी बढ़ती परिस्थितियां, मौसम, और भारतीय कृषि के लिए उत्पादन की जानकारी।",
+                fertilizersTitle: "🧪 उर्वरक गाइड",
+                fertilizersDesc: "आपकी फसल को अधिकतम करने के लिए विभिन्न फसलों और मिट्टी के प्रकारों के लिए उर्वरक पर विशेषज्ञ सिफारिशें।",
+                soilTitle: "🏔️ मिट्टी विश्लेषण",
+                soilDesc: "विस्तृत मिट्टी प्रकार की जानकारी, पीएच स्तर, पोषक तत्व सामग्री, और मिट्टी प्रबंधन के लिए सर्वोत्तम प्रथाएं।",
+                weatherTitle: "🌤️ मौसम अंतर्दृष्टि",
+                weatherDesc: "वास्तविक समय मौसम डेटा, पूर्वानुमान, और खेती के निर्णयों के लिए महत्वपूर्ण जलवायु जानकारी।",
+                weatherWidgetTitle: "आज का कृषि मौसम",
+                tempLabel: "तापमान",
+                humidityLabel: "आर्द्रता",
+                rainfallLabel: "वर्षा",
+                windLabel: "हवा की गति",
+                aboutTitle: "एग्रीस्मार्ट सलाहकार के बारे में",
+                aboutDesc: "आधुनिक तकनीक और पारंपरिक ज्ञान का उपयोग करके बुद्धिमान कृषि समाधानों के साथ किसानों को सशक्त बनाना।"
+            },
+            bn: {
+                heroTitle: "এগ্রিস্মার্ট উপদেষ্টা",
+                heroSubtitle: "আপনার সম্পূর্ণ কৃষি বুদ্ধিমত্তা প্ল্যাটফর্ম - স্মার্ট সমাধানের সাথে কৃষকদের ক্ষমতায়ন",
+                searchTitle: "স্মার্ট কৃষি সুপারিশ",
+                cropLabel: "ফসল নির্বাচন করুন:",
+                soilLabel: "মাটির ধরন:",
+                seasonLabel: "ঋতু:",
+                searchBtn: "সুপারিশ পান",
+                cropsTitle: "🌾 ফসলের তথ্য",
+                cropsDesc: "ফসলের বিস্তৃত ডেটাবেস, তাদের বৃদ্ধির শর্ত, ঋতু, এবং ভারতীয় কৃষির জন্য ফলনের তথ্য।",
+                weatherWidgetTitle: "আজকের কৃষি আবহাওয়া",
+                tempLabel: "তাপমাত্রা",
+                humidityLabel: "আর্দ্রতা",
+                rainfallLabel: "বৃষ্টিপাত",
+                windLabel: "বাতাসের গতি"
+            }
+        };
+
+        let currentLanguage = 'en';
+
+        // Language functions
+        function toggleLanguage() {
+            const dropdown = document.getElementById('languageDropdown');
+            dropdown.classList.toggle('active');
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            updateLanguage();
+            document.getElementById('languageDropdown').classList.remove('active');
+        }
+
+        function updateLanguage() {
+            const translation = translations[currentLanguage] || translations.en;
+            Object.keys(translation).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translation[key];
+                }
+            });
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Event listeners for modals
+        document.addEventListener('DOMContentLoaded', function() {
+            const modals = document.querySelectorAll('.modal');
+            const closes = document.querySelectorAll('.close');
+
+            closes.forEach(close => {
+                close.onclick = function() {
+                    const modal = this.closest('.modal');
+                    closeModal(modal);
+                }
+            });
+
+            modals.forEach(modal => {
+                modal.onclick = function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal);
+                    }
+                }
+            });
+
+            // Close language dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('languageDropdown');
+                const button = document.querySelector('.language-btn');
+                
+                if (!dropdown.contains(event.target) && !button.contains(event.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
+        });
+
+        // Recommendation system
+        function getRecommendations() {
+            const crop = document.getElementById('cropSelect').value;
+            const soil = document.getElementById('soilSelect').value;
+            const season = document.getElementById('seasonSelect').value;
+
+            if (!crop && !soil && !season) {
+                alert('कृपया कम से कम एक विकल्प चुनें / Please select at least one option');
+                return;
+            }
+
+            const recommendations = generateRecommendations(crop, soil, season);
+            displayRecommendations(recommendations);
+            openModal('recommendationsModal');
+        }
+
+        function generateRecommendations(crop, soil, season) {
+            const cropData = {
+                rice: {
+                    fertilizers: "NPK 120:60:40 kg/ha, Apply FYM 10 tons/ha",
+                    soilPreference: "Clay or Loamy soil with good water retention",
+                    irrigation: "Flood irrigation, maintain 2-5cm water level",
+                    diseases: "Blast, Brown spot, Bacterial blight",
+                    bestPractices: "Transplant 20-25 day old seedlings, maintain proper spacing"
+                },
+                wheat: {
+                    fertilizers: "NPK 120:60:40 kg/ha, Split nitrogen application",
+                    soilPreference: "Well-drained loamy soil, pH 6.0-7.5",
+                    irrigation: "4-6 irrigations during crop cycle",
+                    diseases: "Rust, Powdery mildew, Aphids",
+                    bestPractices: "Sow during November, use certified seeds"
+                },
+                cotton: {
+                    fertilizers: "NPK 120:60:60 kg/ha, Apply neem cake",
+                    soilPreference: "Black cotton soil or well-drained soil",
+                    irrigation: "Drip irrigation recommended, avoid waterlogging",
+                    diseases: "Bollworm, Whitefly, Leaf curl virus",
+                    bestPractices: "Use Bt cotton varieties, maintain plant population"
+                },
+                potato: {
+                    fertilizers: "NPK 180:80:100 kg/ha, High potassium requirement",
+                    soilPreference: "Sandy loam, well-drained, pH 5.5-6.5",
+                    irrigation: "Light frequent irrigation, avoid waterlogging",
+                    diseases: "Late blight, Early blight, Potato virus",
+                    bestPractices: "Earthing up, use certified seed potatoes"
+                }
+            };
+
+            const soilRecommendations = {
+                clay: {
+                    management: "Improve drainage, add organic matter, avoid overwatering",
+                    crops: "Rice, wheat, cotton suitable for clay soil",
+                    fertilizer: "Apply phosphorus in split doses, use slow-release fertilizers"
+                },
+                sandy: {
+                    management: "Regular irrigation, add organic matter, mulching",
+                    crops: "Groundnut, millet, vegetables suitable",
+                    fertilizer: "Light frequent fertilizer applications"
+                },
+                black: {
+                    management: "Good for cotton, manage water logging in monsoon",
+                    crops: "Cotton, sugarcane, soybean, wheat",
+                    fertilizer: "Rich in lime, may need phosphorus and nitrogen"
+                }
+            };
+
+            const seasonalAdvice = {
+                kharif: {
+                    timing: "June to October (Monsoon season)",
+                    crops: "Rice, cotton, sugarcane, maize, pulses",
+                    precautions: "Monitor for excess water, pest management important"
+                },
+                rabi: {
+                    timing: "November to April (Winter season)",
+                    crops: "Wheat, potato, onion, mustard, gram",
+                    precautions: "Irrigation planning crucial, protect from frost"
+                },
+                zaid: {
+                    timing: "April to June (Summer season)",
+                    crops: "Fodder crops, vegetables, watermelon",
+                    precautions: "High water requirement, heat stress management"
+                }
+            };
+
+            let result = "<div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 2rem; border-radius: 15px; margin-bottom: 2rem;'>";
+            result += "<h3 style='margin-bottom: 1rem;'>🎯 Personalized Recommendations</h3>";
+            
+            if (crop && cropData[crop]) {
+                result += `<div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; backdrop-filter: blur(10px);'>`;
+                result += `<h4 style='color: #FFD700; margin-bottom: 0.5rem;'>For ${crop.charAt(0).toUpperCase() + crop.slice(1)} Crop:</h4>`;
+                result += `<p><strong>Fertilizers:</strong> ${cropData[crop].fertilizers}</p>`;
+                result += `<p><strong>Soil:</strong> ${cropData[crop].soilPreference}</p>`;
+                result += `<p><strong>Irrigation:</strong> ${cropData[crop].irrigation}</p>`;
+                result += `<p><strong>Common Diseases:</strong> ${cropData[crop].diseases}</p>`;
+                result += `<p><strong>Best Practices:</strong> ${cropData[crop].bestPractices}</p>`;
+                result += `</div>`;
+            }
+
+            if (soil && soilRecommendations[soil]) {
+                result += `<div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; backdrop-filter: blur(10px);'>`;
+                result += `<h4 style='color: #98FB98; margin-bottom: 0.5rem;'>For ${soil.charAt(0).toUpperCase() + soil.slice(1)} Soil:</h4>`;
+                result += `<p><strong>Management:</strong> ${soilRecommendations[soil].management}</p>`;
+                result += `<p><strong>Suitable Crops:</strong> ${soilRecommendations[soil].crops}</p>`;
+                result += `<p><strong>Fertilizer Advice:</strong> ${soilRecommendations[soil].fertilizer}</p>`;
+                result += `</div>`;
+            }
+
+            if (season && seasonalAdvice[season]) {
+                result += `<div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; backdrop-filter: blur(10px);'>`;
+                result += `<h4 style='color: #FFA500; margin-bottom: 0.5rem;'>For ${season.charAt(0).toUpperCase() + season.slice(1)} Season:</h4>`;
+                result += `<p><strong>Timing:</strong> ${seasonalAdvice[season].timing}</p>`;
+                result += `<p><strong>Recommended Crops:</strong> ${seasonalAdvice[season].crops}</p>`;
+                result += `<p><strong>Precautions:</strong> ${seasonalAdvice[season].precautions}</p>`;
+                result += `</div>`;
+            }
+
+            // General recommendations
+            result += `<div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 10px; backdrop-filter: blur(10px);'>`;
+            result += `<h4 style='color: #87CEEB; margin-bottom: 0.5rem;'>General Agricultural Tips:</h4>`;
+            result += `<ul style='margin-left: 1rem;'>`;
+            result += `<li>Always conduct soil testing before planting</li>`;
+            result += `<li>Use certified seeds from reliable sources</li>`;
+            result += `<li>Implement integrated pest management (IPM)</li>`;
+            result += `<li>Monitor weather forecasts regularly</li>`;
+            result += `<li>Maintain crop rotation for soil health</li>`;
+            result += `<li>Consider organic fertilizers alongside chemical ones</li>`;
+            result += `</ul>`;
+            result += `</div>`;
+            
+            result += "</div>";
+            
+            return result;
+        }
+
+        function displayRecommendations(recommendations) {
+            document.getElementById('recommendationsResult').innerHTML = recommendations;
+        }
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Dynamic weather update (simulated)
+        function updateWeatherData() {
+            const temps = [25, 26, 27, 28, 29, 30, 31];
+            const humidity = [60, 62, 65, 67, 70, 72, 75];
+            const rainfall = [0, 0.5, 1.2, 2.5, 3.8, 5.1];
+            const windSpeed = [8, 10, 12, 14, 16, 18];
+
+            document.getElementById('tempValue').textContent = 
+                temps[Math.floor(Math.random() * temps.length)] + '°C';
+            document.getElementById('humidityValue').textContent = 
+                humidity[Math.floor(Math.random() * humidity.length)] + '%';
+            document.getElementById('rainfallValue').textContent = 
+                rainfall[Math.floor(Math.random() * rainfall.length)] + 'mm';
+            document.getElementById('windValue').textContent = 
+                windSpeed[Math.floor(Math.random() * windSpeed.length)] + ' km/h';
+        }
+
+        // Update weather every 30 seconds (simulated)
+        setInterval(updateWeatherData, 30000);
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            checkExistingSession();
+            updateLanguage();
+            updateWeatherData();
+            initVoiceSupport();
+            
+            // Welcome voice message for logged-in users
+            setTimeout(() => {
+                if (userData.name && voiceOutputEnabled) {
+                    speak(`Welcome to AgriSmart Advisor, ${userData.name}! You can use voice commands to navigate. Say "help" for available commands.`);
+                }
+            }, 2000);
+        });
+
+        // Add loading animation for search
+        function showLoading() {
+            const btn = document.getElementById('searchBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Loading...';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }, 2000);
+        }
+
+        // Enhanced recommendation function with loading
+        const originalGetRecommendations = getRecommendations;
+        getRecommendations = function() {
+            showLoading();
+            setTimeout(originalGetRecommendations, 2000);
+        };
+    </script>
+</body>
+</html>
